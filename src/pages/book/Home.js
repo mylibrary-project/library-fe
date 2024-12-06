@@ -3,10 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import apiClient from "../../api/api";
 import { deleteBook } from "../../redux/bookSlice";
+import errorDisplay from "../../api/errorDisplay";
 
 export default function Home() {
   const books = useSelector((state) => state.book.books);
   const role = useSelector((state) => state.user.role);
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const dispatch = useDispatch();
 
   const handleDeleteBook = async (id) => {
@@ -67,13 +69,24 @@ export default function Home() {
                   🗑️
                 </button>
               )}
+              {/* {role === "ROLE_USER" ? (
+                <button
+                  onClick={() => handleRentBook()}
+                  className="text-green-500 hover:text-green-700 bg-green-100 p-2 rounded-md w-full mt-3"
+                >
+                  📖
+                </button>
+              ) : (
+                isLoggedIn && (
+                  <button
+                    onClick={() => handleRentBook()}
+                    className="text-green-500 hover:text-green-700 bg-green-100 p-2 rounded-md"
+                  >
+                    📖
+                  </button>
+                )
+              )} */}
             </div>
-            <button
-              onClick={() => handleRentBook()}
-              className="text-green-500 hover:text-green-700 bg-red-100 p-2 rounded-md"
-            >
-              대여
-            </button>
           </div>
         ))}
       </div>

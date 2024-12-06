@@ -5,6 +5,7 @@ const userSlice = createSlice({
   initialState: {
     userInfoList: [],
     isLoggedIn: false,
+    currentUser: null,
     jwtToken: null,
     role: null,
   },
@@ -15,13 +16,15 @@ const userSlice = createSlice({
     clearUserInfo: (state) => {
       state.userInfoList = [];
     },
-    login: (state) => {
+    login: (state, action) => {
       state.isLoggedIn = true;
+      state.currentUser = action.payload;
     },
     logout: (state) => {
       state.isLoggedIn = false;
       state.role = null;
       state.jwtToken = null;
+      state.currentUser = null;
     },
     saveJwtToken: (state, action) => {
       state.jwtToken = action.payload;

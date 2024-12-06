@@ -1,14 +1,14 @@
 import React from "react";
-import { useLocation, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import bookApi from "../../api/api";
-import { deleteBook } from "../../redux/bookSlice";
+import { Link, useLocation } from "react-router-dom";
 import apiClient from "../../api/api";
+import { deleteBook } from "../../redux/bookSlice";
 
 export default function Search() {
   const location = useLocation();
   const dispatch = useDispatch();
   const role = useSelector((state) => state.user.role);
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const { results = [], searchTerm = "" } = location.state || {};
 
   const handleDeleteBook = async (id) => {
@@ -27,6 +27,8 @@ export default function Search() {
       console.error(error.message);
     }
   };
+
+  const handleRentBook = () => {};
 
   return (
     <div className="p-5 bg-gray-100 min-h-screen">
@@ -53,25 +55,41 @@ export default function Search() {
                 <h2 className="text-lg font-semibold mb-2">{book.title}</h2>
                 <p className="text-gray-600">{book.author}</p>
               </div>
-              {role === "ROLE_ADMIN" && (
-                <div className="flex mt-4 space-x-4">
+              <div className="flex mt-4 space-x-4">
+                {role === "ROLE_ADMIN" && (
                   <Link
                     to={`/update/${book.id}`}
                     className="text-blue-500 hover:text-blue-700 bg-blue-100 p-2 rounded-md"
                   >
                     🖋️
                   </Link>
+                )}
+                {role === "ROLE_ADMIN" && (
                   <button
                     onClick={() => handleDeleteBook(book.id)}
                     className="text-red-500 hover:text-red-700 bg-red-100 p-2 rounded-md"
                   >
                     🗑️
                   </button>
-                </div>
-              )}
-              <button className="text-green-500 hover:text-green-700 bg-red-100 p-2 rounded-md">
-                대여
-              </button>
+                )}
+                {/* {role === "ROLE_USER" ? (
+                  <button
+                    onClick={() => handleRentBook()}
+                    className="text-green-500 hover:text-green-700 bg-green-100 p-2 rounded-md w-full mt-3"
+                  >
+                    📖
+                  </button>
+                ) : (
+                  isLoggedIn && (
+                    <button
+                      onClick={() => handleRentBook()}
+                      className="text-green-500 hover:text-green-700 bg-green-100 p-2 rounded-md"
+                    >
+                      📖
+                    </button>
+                  )
+                )} */}
+              </div>
             </div>
           ))}
         </div>

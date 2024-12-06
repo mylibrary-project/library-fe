@@ -8,6 +8,7 @@ export default function Category() {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const categoryName = searchParams.get("category");
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const role = useSelector((state) => state.user.role);
 
   const [books, setBooks] = useState([]);
@@ -59,6 +60,8 @@ export default function Category() {
     }
   }, [categoryName]);
 
+  const handleRentBook = () => {};
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error loading books: {error.message}</div>;
 
@@ -89,25 +92,41 @@ export default function Category() {
                 <h2 className="text-lg font-semibold mb-2">{book.title}</h2>
                 <p className="text-gray-600">{book.author}</p>
               </div>
-              {role === "ROLE_ADMIN" && (
-                <div className="flex mt-4 space-x-4">
+              <div className="flex mt-4 space-x-4">
+                {role === "ROLE_ADMIN" && (
                   <Link
                     to={`/update/${book.id}`}
                     className="text-blue-500 hover:text-blue-700 bg-blue-100 p-2 rounded-md"
                   >
                     🖋️
                   </Link>
+                )}
+                {role === "ROLE_ADMIN" && (
                   <button
                     onClick={() => handleDeleteBook(book.id)}
                     className="text-red-500 hover:text-red-700 bg-red-100 p-2 rounded-md"
                   >
                     🗑️
                   </button>
-                </div>
-              )}
-              <button className="text-green-500 hover:text-green-700 bg-red-100 p-2 rounded-md">
-                대여
-              </button>
+                )}
+                {/* {role === "ROLE_USER" ? (
+                  <button
+                    onClick={() => handleRentBook()}
+                    className="text-green-500 hover:text-green-700 bg-green-100 p-2 rounded-md w-full mt-3"
+                  >
+                    📖
+                  </button>
+                ) : (
+                  isLoggedIn && (
+                    <button
+                      onClick={() => handleRentBook()}
+                      className="text-green-500 hover:text-green-700 bg-green-100 p-2 rounded-md"
+                    >
+                      📖
+                    </button>
+                  )
+                )} */}
+              </div>
             </div>
           ))}
         </div>

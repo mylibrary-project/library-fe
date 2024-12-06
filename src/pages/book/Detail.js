@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import apiClient from "../../api/api";
+import errorDisplay from "../../api/errorDisplay";
 
 export default function Detail() {
   const { id } = useParams();
+  const role = useSelector((state) => state.user.role);
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const currentUser = useSelector((state) => state.user.currentUser);
   const [book, setBook] = useState({});
 
   useEffect(() => {
@@ -21,6 +26,17 @@ export default function Detail() {
   if (!book.imgsrc) {
     return <div>Loading...</div>;
   }
+
+  const handleRentBook = async () => {
+    try {
+      const response = await apiClient.post(
+        `/api/rents/rent?bookId=${id}&username=${currentUser}`
+      );
+      console.log(response);
+    } catch (error) {
+      errorDisplay(error);
+    }
+  };
 
   return (
     <div className="p-5 bg-gray-100 min-h-screen flex justify-center items-center">
@@ -41,10 +57,24 @@ export default function Detail() {
         </p>
         <p className="text-gray-600 mb-4">{book.description}</p>
         <p className="text-gray-500">Published by: {book.publisher}</p>
+        {role === "ROLE_USER" ? (
+          <button
+            onClick={() => handleRentBook()}
+            className="text-green-500 hover:text-green-700 bg-green-100 p-2 rounded-md w-full mt-3"
+          >
+            📖
+          </button>
+        ) : (
+          isLoggedIn && (
+            <button
+              onClick={() => handleRentBook()}
+              className="text-green-500 hover:text-green-700 bg-green-100 p-2 rounded-md"
+            >
+              📖
+            </button>
+          )
+        )}
       </div>
-      <button className="text-green-500 hover:text-green-700 bg-red-100 p-2 rounded-md">
-        대여
-      </button>
     </div>
   );
 }

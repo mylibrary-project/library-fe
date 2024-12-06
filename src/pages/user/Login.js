@@ -24,7 +24,7 @@ export default function Login() {
         }
       );
       const token = response.headers["authorization"];
-      await dispatch(login());
+      await dispatch(login(email));
       console.log("토큰:" + token);
       await dispatch(saveJwtToken(token));
       await dispatch(setRole(response.data));

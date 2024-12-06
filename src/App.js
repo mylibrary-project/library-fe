@@ -1,12 +1,12 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Layout from "./components/Layout";
-import Home from "./pages/book/Home";
-import Detail from "./pages/book/Detail";
 import Add from "./pages/book/Add";
+import Detail from "./pages/book/Detail";
+import Home from "./pages/book/Home";
+import Search from "./pages/book/Search";
 import Update from "./pages/book/Update";
 import Category from "./pages/category/Category";
-import Search from "./pages/book/Search";
 import Join from "./pages/user/Join";
 import Login from "./pages/user/Login";
 
