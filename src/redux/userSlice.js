@@ -4,6 +4,7 @@ const userSlice = createSlice({
   name: "users",
   initialState: {
     userInfoList: [],
+    userRentList: [],
     isLoggedIn: false,
     currentUser: null,
     jwtToken: null,
@@ -13,8 +14,12 @@ const userSlice = createSlice({
     addUserInfo: (state, action) => {
       state.userInfoList.push(action.payload);
     },
+    addUserRentInfo: (state, action) => {
+      state.userRentList.push(action.payload);
+    },
     clearUserInfo: (state) => {
       state.userInfoList = [];
+      state.userRentList = [];
     },
     login: (state, action) => {
       state.isLoggedIn = true;
@@ -42,5 +47,6 @@ export const {
   logout,
   saveJwtToken,
   setRole,
+  addUserRentInfo,
 } = userSlice.actions;
 export default userSlice.reducer;

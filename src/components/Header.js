@@ -1,19 +1,16 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import bookApi, { categoryApi } from "../api/api";
-import errorDisplay from "../api/errorDisplay";
-import { fetchjwtToken, logout } from "../redux/userSlice";
 import apiClient from "../api/api";
+import errorDisplay from "../api/errorDisplay";
+import { clearUserInfo, logout } from "../redux/userSlice";
 
-export default function Header() {
+export default function Header({ refreshCategories, resetCategoryRefresh }) {
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [categories, setCategories] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const role = useSelector((state) => state.user.role);
   const userInfo = useSelector((state) => state.user.isLoggedIn);
-  const jwtToken = useSelector((state) => state.user.jwtToken);
   const dispatch = useDispatch();
   const nav = useNavigate();
 
@@ -33,12 +30,15 @@ export default function Header() {
       try {
         const response = await apiClient.get("/api/categories");
         setCategories(response.data);
+        if (refreshCategories) {
+          resetCategoryRefresh();
+        }
       } catch (error) {
         console.error("Failed to fetch categories:", error);
       }
     };
     fetchCategories();
-  }, []);
+  }, [refreshCategories]);
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -58,6 +58,7 @@ export default function Header() {
 
   const handleLogout = async (e) => {
     dispatch(logout());
+    dispatch(clearUserInfo());
     alert("로그아웃 되었습니다.");
     nav("/");
   };

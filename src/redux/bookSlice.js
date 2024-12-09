@@ -22,19 +22,8 @@ const bookSlice = createSlice({
     deleteBook: (state, action) => {
       state.books = state.books.filter((b) => b.id !== action.payload);
     },
-    rentalBook: (state, action) => {
-      state.books = state.books.map((b) =>
-        b.id === action.payload
-          ? {
-              ...b,
-              rented: !b.rented,
-            }
-          : b
-      );
-    },
   },
 });
 
-export const { addBook, updateBook, deleteBook, rentalBook } =
-  bookSlice.actions;
+export const { addBook, updateBook, deleteBook } = bookSlice.actions;
 export default bookSlice.reducer;

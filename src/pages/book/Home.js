@@ -1,21 +1,19 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 import apiClient from "../../api/api";
 import { deleteBook } from "../../redux/bookSlice";
-import errorDisplay from "../../api/errorDisplay";
 
 export default function Home() {
   const books = useSelector((state) => state.book.books);
   const role = useSelector((state) => state.user.role);
-  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const { triggerCategoryRefresh } = useOutletContext();
   const dispatch = useDispatch();
 
   const handleDeleteBook = async (id) => {
     try {
-      await apiClient.delete(`/api/books/${id}`, {
-        timeout: 5000,
-      });
+      await apiClient.delete(`/api/books/${id}`, {});
+      triggerCategoryRefresh();
       dispatch(deleteBook(id));
     } catch (error) {
       if (error.code === "ECONNABORTED") {
@@ -27,8 +25,6 @@ export default function Home() {
       console.error(error.message);
     }
   };
-
-  const handleRentBook = () => {};
 
   return (
     <div className="p-5 bg-gray-100 min-h-screen">

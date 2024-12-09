@@ -1,15 +1,15 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useOutletContext } from "react-router-dom";
 import apiClient from "../../api/api";
 
 export default function Category() {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const categoryName = searchParams.get("category");
-  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const role = useSelector((state) => state.user.role);
+  const { triggerCategoryRefresh } = useOutletContext();
 
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -18,7 +18,7 @@ export default function Category() {
   const handleDeleteBook = async (bookId) => {
     try {
       await axios.delete(`/api/books/${bookId}`);
-      // 삭제 후 books 상태 재로딩
+      triggerCategoryRefresh();
       fetchBooks();
     } catch (err) {
       console.error("책 삭제 중 오류 발생:", err);

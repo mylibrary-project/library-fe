@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import bookApi, { categoryApi } from "../../api/api";
+import { useNavigate, useOutletContext } from "react-router-dom";
+import apiClient from "../../api/api";
 import errorDisplay from "../../api/errorDisplay";
 import { addBook } from "../../redux/bookSlice";
-import apiClient from "../../api/api";
 
 export default function Add() {
   const dispatch = useDispatch();
   const nav = useNavigate();
+  const { triggerCategoryRefresh } = useOutletContext();
 
   const titleRef = useRef(null);
   const authorRef = useRef(null);
@@ -89,6 +89,7 @@ export default function Add() {
       };
       const response = await apiClient.post("/api/books", data);
       dispatch(addBook(response.data));
+      triggerCategoryRefresh();
     } catch (error) {
       errorDisplay(error);
     }

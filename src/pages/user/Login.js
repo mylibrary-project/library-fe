@@ -3,12 +3,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import apiClient from "../../api/api";
 import errorDisplay from "../../api/errorDisplay";
-import { login, saveJwtToken, setRole } from "../../redux/userSlice";
+import {
+  addUserRentInfo,
+  login,
+  saveJwtToken,
+  setRole,
+} from "../../redux/userSlice";
 
 export default function Login() {
   const dispatch = useDispatch();
   const nav = useNavigate();
-  const role = useSelector((state) => state.user.role);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -23,11 +27,15 @@ export default function Login() {
           withCredentials: true,
         }
       );
+      const rentResponse = await apiClient.get(
+        `/api/rents/user?username=${email}`
+      );
       const token = response.headers["authorization"];
       await dispatch(login(email));
       console.log("토큰:" + token);
       await dispatch(saveJwtToken(token));
       await dispatch(setRole(response.data));
+      await dispatch(addUserRentInfo(rentResponse.data));
       alert("로그인 성공!!");
       nav("/");
     } catch (error) {

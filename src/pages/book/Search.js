@@ -1,21 +1,20 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useOutletContext } from "react-router-dom";
 import apiClient from "../../api/api";
 import { deleteBook } from "../../redux/bookSlice";
 
 export default function Search() {
   const location = useLocation();
   const dispatch = useDispatch();
+  const { triggerCategoryRefresh } = useOutletContext();
   const role = useSelector((state) => state.user.role);
-  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const { results = [], searchTerm = "" } = location.state || {};
 
   const handleDeleteBook = async (id) => {
     try {
-      await apiClient.delete(`/api/books/${id}`, {
-        timeout: 5000,
-      });
+      await apiClient.delete(`/api/books/${id}`);
+      triggerCategoryRefresh();
       dispatch(deleteBook(id));
     } catch (error) {
       if (error.code === "ECONNABORTED") {
