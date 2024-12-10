@@ -27,7 +27,7 @@ export default function Home() {
   };
 
   return (
-    <div className="p-5 bg-gray-100 min-h-screen">
+    <div className="p-5 bg-gray-100 min-h-full">
       <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">
         책 목록
       </h1>
